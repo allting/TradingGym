@@ -75,8 +75,12 @@ class trading_env:
         df_section = self.df.iloc[begin_point: end_point]
         return df_section
 
+    def _selection_all(self):
+        return self.df
+
     def reset(self):
-        self.df_sample = self._random_choice_section()
+        # self.df_sample = self._random_choice_section()
+        self.df_sample = self._selection_all()
         self.step_st = 0
         # define the price to calculate the reward
         self.price = self.df_sample[self.price_name].as_matrix()
@@ -230,6 +234,8 @@ class trading_env:
             
         # use next tick, maybe choice avg in first 10 tick will be better to real backtest
         enter_price = self.chg_price[0]
+        print('action:{}, enter_price:{}, current_mkt_position:{}'.format(action, enter_price, current_mkt_position))
+
         if action == 1 and self.max_position > current_mkt_position >= 0:
             open_posi = (current_mkt_position == 0)
             self._long(open_posi, enter_price, current_mkt_position, current_price_mean)
